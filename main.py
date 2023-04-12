@@ -11,13 +11,13 @@ from forms import LoginForm, RegisterForm, CreatePostForm, CommentForm
 from flask_gravatar import Gravatar
 import os
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = "8BYkEfBA606donzWISihBXox7C0sKR6b"
 ckeditor = CKEditor(app)
 Bootstrap(app)
 gravatar = Gravatar(app, size=100, rating='g', default='retro', force_default=False, force_lower=False, use_ssl=False, base_url=None)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL',"sqlite:///blog.db")
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///blog.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -214,8 +214,20 @@ def edit_post(post_id):
 @admin_only
 def delete_post(post_id):
     post_to_delete = BlogPost.query.get(post_id)
+
+    print(post_to_delete)
     db.session.delete(post_to_delete)
     db.session.commit()
+    return redirect(url_for('get_all_posts'))
+
+@app.route("/delete-comment/<int:auth_id>")
+@admin_only
+def delete_comment(auth_id):
+    # c_id = db.session.query(Comment).filter_by(author_id = auth_id).first()
+    # comment_to_delete = Comment.query.get(c_id)
+    #
+    # db.session.delete(c_id)
+    # db.session.commit()
     return redirect(url_for('get_all_posts'))
 
 
